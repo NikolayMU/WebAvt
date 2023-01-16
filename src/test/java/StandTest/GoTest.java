@@ -76,99 +76,62 @@ public class GoTest {
     }
 
 
-
-
-
-
-
     @Test
-    @DisplayName("Тест-кейс №2: Поверка отображения коректного номера телефона")
-    void test_22() throws InterruptedException {
-
-        driver.get("https://confaelshop.ru/");
-
-        String s = driver.findElement(By.xpath("//a[@class='phone']")).getText();
-        assert (s.equals("8 (495) 241-91-04"));     // проверка значения
-
-    }
-    @Test
-    @DisplayName("Тест-кейс №3: Добавление товара в корзину")
+    @DisplayName("Тест-кейс №3: Авторизация на сайте и проверка наличия постов")
     void test_3() throws InterruptedException {
 
-        driver.get("https://confaelshop.ru/");
+        driver.get("https://test-stand.gb.ru/login");
 
-
-        actions.moveToElement(driver.findElement(By.xpath("//div[@class='menu__catalog js-open-catalog']//span[.='Каталог']")))
+        driver.findElement(By.xpath("//input[@type='text']")).sendKeys("1234");
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys("81dc9bdb52");
+        driver.findElement(By.xpath("//button[@form='login']")).click();
+        Thread.sleep(5000);
+        actions.moveToElement(driver.findElement(By.xpath("//h2[.='Rise with vegetables']")))
                 .click()
                 .pause(Duration.ofSeconds(3))
                 .perform();
 
-        actions.moveToElement(driver.findElement(By.xpath("//div[@class='submenu__link']//a[.='Шоколад']")))
-                .click()
-                .pause(Duration.ofSeconds(3))
-                .perform();
-
-        driver.findElement(By.xpath("//li[@id='bx_1847241719_492']")).click();
-        Thread.sleep(5000);
-
-        driver.findElement(By.xpath("//a[.='Шоколадный ЗАЯЦ 110 г в ассортименте']")).click();
-        Thread.sleep(5000);
-
-        driver.findElement(By.xpath("//a[@id='cf-btn-cart']")).click();
-        Thread.sleep(5000);
-        driver.findElement(By.xpath("//a[@class='btn btn btn--cart']")).click();
-        String s = driver.findElement(By.xpath("//a[.='ЗАЯЦ молочный шоколад 110гр']")).getText();
-
-        assertTrue (s.equals("ЗАЯЦ молочный шоколад 110гр"));
-
+        String s = driver.findElement(By.xpath("//h1[.='Rise with vegetables']")).getText();
+        assert (s.equals("Rise with vegetables"));
     }
+
     @Test
-    @DisplayName("Тест-кейс №4: Проверка регистрации с невалидными данными")
+    @DisplayName("Тест-кейс №4: Авторизация на сайте и проверка наличия описания под постом")
     void test_4() throws InterruptedException {
 
-        driver.get("https://confaelshop.ru/#popup-login");
+        driver.get("https://test-stand.gb.ru/login");
 
-        driver.findElement(By.xpath("//input[@name='USER_LOGIN']")).sendKeys("nmu1989@gmail.com");
-        driver.findElement(By.xpath("//input[@name='USER_PASSWORD']")).sendKeys("f111albc");
-        driver.findElement(By.xpath("//span[text()='ВОЙТИ']")).click();
+        driver.findElement(By.xpath("//input[@type='text']")).sendKeys("1234");
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys("81dc9bdb52");
+        driver.findElement(By.xpath("//button[@form='login']")).click();
         Thread.sleep(5000);
-        driver.findElement(By.xpath("//*[@id=\"wrapper\"]/div[2]/div/div/div[5]/div[3]/a")).click();
-        String s = driver.findElement(By.xpath("/html/body/div[4]/div/div/div[1]/form/div[1]/p/font")).getText();
-
-        assertTrue (s.equals("Неверный логин или пароль."));
-    }
-    @Test
-    @DisplayName("Тест-кейс №5: Удаление рекламного баннера")
-    void test_5() throws InterruptedException {
-
-        driver.get("https://confaelshop.ru/");
-
-        ((JavascriptExecutor)driver).executeScript("let element = document.evaluate(\"//div[@class='blockattach__content']\",document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)\n" +
-           "element.singleNodeValue.remove()");
-
-        Thread.sleep(5000);
-
-    }
-
-    @Test
-    @DisplayName("Тест-кейс №6: Скроллинг")
-    void test_6() throws InterruptedException {
-
-        driver.get("https://confaelshop.ru/");
-
-        actions.scrollToElement(driver.findElement(By.xpath("//div[@class='popmechanic-input']")))
-                .perform();
-        Thread.sleep(5000);
-
-        actions.moveToElement(driver.findElement(By.xpath("//div[@class='popmechanic-input']")))
+        actions.moveToElement(driver.findElement(By.xpath("//h2[.='Rise with vegetables']")))
                 .click()
-                .sendKeys("nmu1989@gmail.com")
                 .pause(Duration.ofSeconds(3))
                 .perform();
 
-        driver.findElement(By.xpath("//button[@name='button']")).click();
-        Assertions.assertTrue(driver.getPageSource().contains("Остался последний шаг — подтвердить вашу электронную почту. " +
-                "Для этого нажмите кнопку в письме, которое мы вам отправили."));
+        driver.findElement(By.xpath("//div[text()='Самое простое блюдо риси овощи']"));
+        Assertions.assertTrue(driver.getPageSource().contains("Самое простое блюдо риси овощи"));
+
+    }
+    @Test
+    @DisplayName("Тест-кейс №5: Авторизация на сайте и проверка перехода между страницами")
+    void test_5() throws InterruptedException {
+
+        driver.get("https://test-stand.gb.ru/login");
+
+        driver.findElement(By.xpath("//input[@type='text']")).sendKeys("1234");
+        driver.findElement(By.xpath("//input[@type='password']")).sendKeys("81dc9bdb52");
+        driver.findElement(By.xpath("//button[@form='login']")).click();
+        Thread.sleep(5000);
+        actions.moveToElement(driver.findElement(By.xpath("//*[@class='svelte-d01pfs']")))
+                .click()
+                .pause(Duration.ofSeconds(3))
+                .perform();
+
+        driver.findElement(By.xpath("//h2[text()='Potatoes Free']"));
+        Assertions.assertTrue(driver.getPageSource().contains("Potatoes Free"));
+
     }
 
 
